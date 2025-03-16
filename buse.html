@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İyi ki Doğdun Buse!</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #ffebf2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 3em;
+            color: darkred;
+            margin-top: 50px;
+        }
+        .cake-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            flex-direction: column;
+        }
+        .cake {
+            width: 250px;
+            height: 100px;
+            background: white;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        .cake::before {
+            content: '';
+            position: absolute;
+            top: -70px;
+            left: 25px;
+            width: 200px;
+            height: 70px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+        .candle {
+            width: 10px;
+            height: 40px;
+            background: red;
+            position: absolute;
+            top: -40px;
+            cursor: pointer;
+        }
+        .flame {
+            width: 10px;
+            height: 20px;
+            background: yellow;
+            position: absolute;
+            top: -20px;
+            left: 0;
+            border-radius: 50%;
+            display: block;
+            animation: flicker 0.3s infinite alternate;
+        }
+        .balloon {
+            width: 60px;
+            height: 90px;
+            background-color: #ff72b5;
+            border-radius: 50%;
+            position: absolute;
+            top: 10%;
+            animation: bounce 1s infinite ease-in-out;
+            cursor: pointer;
+        }
+        .balloon:nth-child(odd) {
+            background-color: #ffa07a;
+        }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: gold;
+            border-radius: 50%;
+            animation: confettiFall 2s linear infinite;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-50%); opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        .message {
+            font-size: 24px;
+            color: darkred;
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ff99cc;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ff66b3;
+        }
+        #countdown {
+            font-size: 30px;
+            color: darkblue;
+            margin-top: 20px;
+        }
+        .personal-message {
+            margin-top: 30px;
+            font-size: 20px;
+            color: darkgreen;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>İyi Ki Doğdun Buse! 🎉</h1>
+
+    <div id="countdown"></div>
+
+    <div class="cake-container">
+        <div class="cake" id="cake"></div>
+        <button onclick="blowCandles()">Mumları Üfle 🎂</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <div class="personal-message">
+        <p>Buse'ye özel bir mesaj: Umarım bu yıl senin için en güzel yıl olur! 🎉</p>
+    </div>
+
+    <audio id="song" autoplay loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Balonlar
+        for (let i = 0; i < 6; i++) {
+            let balloon = document.createElement("div");
+            balloon.className = "balloon";
+            balloon.style.left = `${Math.random() * 100}%`;
+            document.body.appendChild(balloon);
+        }
+
+        // Konfeti
+        for (let i = 0; i < 30; i++) {
+            let confetti = document.createElement("div");
+            confetti.className = "confetti";
+            confetti.style.left = `${Math.random() * 100}%`;
+            confetti.style.animationDelay = `${Math.random() * 2}s`;
+            document.body.appendChild(confetti);
+        }
+
+        // Kek ve mumlar
+        const cake = document.getElementById("cake");
+        for (let i = 0; i < 17; i++) {
+            let candle = document.createElement("div");
+            candle.className = "candle";
+            candle.style.left = `${30 + i * 12}px`;
+
+            let flame = document.createElement("div");
+            flame.className = "flame";
+            candle.appendChild(flame);
+            candle.onclick = function () {
+                flame.style.display = flame.style.display === "none" ? "block" : "none";
+            };
+
+            cake.appendChild(candle);
+        }
+
+        function blowCandles() {
+            document.querySelectorAll(".flame").forEach(f => f.style.display = "none");
+            document.getElementById("message").innerText = "Dilek Tut Buse! 🎉";
+        }
+
+        // Geri sayım
+        let countdownDate = new Date("Mar 17, 2025 00:00:00").getTime();
+        let x = setInterval(function() {
+            let now = new Date().getTime();
+            let distance = countdownDate - now;
+            let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById("countdown").innerHTML = days + "g " + hours + "s " + minutes + "m " + seconds + "sn";
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "Zaman Doldu!";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
